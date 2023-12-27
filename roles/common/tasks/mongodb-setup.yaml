@@ -20,5 +20,5 @@
 
 - name: "Load {{component}} data"
   ansible.builtin.command: "mongo --host mongodb.prudhvi.online < /app/schema/{{component}}.js"
-  when: entries_count.stdout == "0"
+  when: 'entries_count.stdout == "0"'
 
