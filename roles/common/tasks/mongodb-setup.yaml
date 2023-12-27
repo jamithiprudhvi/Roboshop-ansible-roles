@@ -1,0 +1,24 @@
+- name: Copy mongodb.repo
+  ansible.builtin.copy:
+    src: mongodb.repo
+    dest: /etc/yum.repos.d/mongodb.repo
+
+- name: Install MongoDB client
+  ansible.builtin.package:
+    name: mongodb-org-shell 
+    state: present
+
+- name: Get the entries count
+  ansible.builtin.command:  mongo --host mongodb.prudhvi.online --quiet --eval 'db = db.getSiblingDB("catalogue"); db.products.count()'
+  register: entries_count
+  when: component == "catalogue"
+
+- name: Get the entries count
+  ansible.builtin.command:  mongo --host mongodb.prudhvi.online --quiet --eval 'db = db.getSiblingDB("users"); db.users.count()'
+  register: entries_count
+  when: component == "user"
+
+- name: "Load {{component}} data"
+  ansible.builtin.command: "mongo --host mongodb.prudhvi.online < /app/schema/{{component}}.js"
+  when: entries_count.stdout == "0"
+
