@@ -4,8 +4,8 @@
 #     dest: "/etc/systemd/system/{{component}}.service"
 
 - name: "Copy {{component}}.service"
-  ansible.builtin.copy:
-    src: "{{component}}.service"
+  ansible.builtin.template:
+    src: "{{component}}.service.j2"
     dest: "/etc/systemd/system/{{component}}.service"
 
 - name: System daemon reload and start
